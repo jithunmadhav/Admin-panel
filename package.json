@@ -1,7 +1,7 @@
 {
   "name": "admin-panel",
   "version": "0.0.1",
-  "description": "",
+  "description": "<p align=\"center\">   <a href=\"http://nestjs.com/\" target=\"blank\"><img src=\"https://nestjs.com/img/logo-small.svg\" width=\"120\" alt=\"Nest Logo\" /></a> </p>",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
@@ -26,6 +26,7 @@
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/sequelize": "^11.0.0",
     "bcrypt": "^5.1.1",
+    "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "mysql2": "^3.13.0",
     "reflect-metadata": "^0.2.2",
@@ -78,5 +79,17 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  }
+  },
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jithunmadhav/Task-manager.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jithunmadhav/Task-manager/issues"
+  },
+  "homepage": "https://github.com/jithunmadhav/Task-manager#readme"
 }

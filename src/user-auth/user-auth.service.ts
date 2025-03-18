@@ -25,4 +25,9 @@ export class UserAuthService {
         return user;
       }
     
+    async findAll(): Promise<User[]> {
+        const users= await this.userModel.findAll();
+        return users;
+    }  
 }
+

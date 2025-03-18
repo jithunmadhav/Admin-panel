@@ -9,9 +9,9 @@ export class CreateUserDto {
     @IsNotEmpty()
     email: string;
 
-    @IsNumber()
+    @IsString()
     @IsNotEmpty()
-    mobile: number;
+    mobile: string;
 
     @IsString()
     @MinLength(6)

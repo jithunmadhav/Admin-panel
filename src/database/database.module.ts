@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from 'src/user-auth/entities/user.model';
 
 @Module({
     imports: [
+        ConfigModule.forRoot({isGlobal:true}),
         SequelizeModule.forRoot({
             dialect: 'mysql',
             host: process.env.DB_HOST,

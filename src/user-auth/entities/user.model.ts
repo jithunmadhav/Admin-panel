@@ -12,4 +12,7 @@ export class User extends Model {
 
   @Column
   password: string;
+
+  @Column
+  token:string;
 }

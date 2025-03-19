@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfigModuleApp } from 'src/config/config.module';
+import { Task } from 'src/task/entities/task.model';
 import { User } from 'src/user/entities/user.model';
 @Module({
     imports: [
@@ -15,7 +16,7 @@ import { User } from 'src/user/entities/user.model';
             synchronize: true,
             autoLoadModels: true,
             sync:{alter: true},
-            models: [User],
+            models: [User,Task],
         }),
     ],
 })

@@ -12,17 +12,20 @@ export class UserAuthController {
     async findAll(): Promise<User[]> {
       return this.userAuthService.findAll();
     }  
+
     @UseGuards(AuthGuard)
     @Get(':id')
     async findOne(@Request() req:any ,@Param('id',ParseIntPipe) id:number): Promise<User> {
         return this.userAuthService.findOne(id,req.userId);
     }
 
+    @UseGuards(AuthGuard)
     @Patch()
     async updateUser(@Param('id',ParseIntPipe) id:number,@Body() updateUserDto:UpdateUserDto): Promise<User> {
         return this.userAuthService.updateUser(id,updateUserDto);
     }
 
+    @UseGuards(AuthGuard)
     @Delete(':id')
     async delete(@Param('id',ParseIntPipe) id:number): Promise<{message:string}> {
         return this.userAuthService.delete(id);

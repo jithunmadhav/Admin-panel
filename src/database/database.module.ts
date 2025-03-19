@@ -14,6 +14,7 @@ import { User } from 'src/user/entities/user.model';
             database: process.env.DB_NAME,
             synchronize: true,
             autoLoadModels: true,
+            sync:{alter: true},
             models: [User],
         }),
     ],

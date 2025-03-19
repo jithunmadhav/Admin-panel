@@ -1,10 +1,7 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { User } from './entities/user.model';
 import { InjectModel } from '@nestjs/sequelize';
-import * as bcrypt from 'bcrypt';
-import { Op } from 'sequelize';
 import { UpdateUserDto } from './dto/uodate-user.dto';
-import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 
@@ -19,7 +16,8 @@ export class UserAuthService {
         return users;
     }  
 
-    async findOne(id:number): Promise<User> {
+    async findOne(id:number,userId:any): Promise<User> {
+        console.log('ID',userId);
         const user= await this.userModel.findOne({where:{id}});
         if(!user) throw new NotFoundException('User not found')
         return user;

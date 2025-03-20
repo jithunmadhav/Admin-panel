@@ -5,11 +5,12 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from 'src/user/entities/user.model';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModuleApp } from 'src/config/config.module';
+import { Task } from 'src/task/entities/task.model';
 
 @Module({
   imports:[
     ConfigModuleApp,
-    SequelizeModule.forFeature([User]),
+    SequelizeModule.forFeature([User,Task]),
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,

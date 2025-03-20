@@ -6,12 +6,17 @@ import { RegisterDto } from './dto/register.dto';
 import { Op } from 'sequelize';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
+import { Task } from 'src/task/entities/task.model';
 
 @Injectable()
 export class AuthService {
     constructor (
         @InjectModel(User)
         private userModel: typeof User,
+
+        @InjectModel(Task)
+        private taskModel: typeof Task,
+
         private jwtService: JwtService
     ) {}
     async create(registerDto: RegisterDto): Promise<User> {
@@ -28,7 +33,12 @@ export class AuthService {
       }
 
       async login(loginDto:LoginDto): Promise<{}> {
-        const user= await this.userModel.findOne({where:{email:loginDto.email},raw: true});
+        const user= await this.userModel.findOne({
+            where:{email:loginDto.email}
+            ,include:[{
+                model:this.taskModel
+            }]
+            ,raw: true});
         if(!user) throw new NotFoundException('User not found')
         const isMatch = await bcrypt.compare(loginDto.password, user.password);
         if(!isMatch) throw new NotFoundException('User not found')

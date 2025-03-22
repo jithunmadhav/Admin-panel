@@ -18,7 +18,7 @@ export class TaskService {
     async create(createTaskDto:CreateTaskDto): Promise<Task> {
         const user= await this.userModel.findOne({where:{id:createTaskDto.userId}});
         if(!user) throw new NotFoundException('User not found')
-        const task=await this.taskModel.create({createTaskDto});
+        const task=await this.taskModel.create({...createTaskDto});
         return task;
     }
 

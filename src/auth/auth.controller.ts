@@ -1,8 +1,9 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { User } from 'src/user/entities/user.model';
 import { LoginDto } from './dto/login.dto';
+import { AuthGuard } from './guards/jwt-auth.guard';
 interface ApiResponse {
     statusCode: HttpStatus;
     message: string;
@@ -31,5 +32,17 @@ export class AuthController {
             data: user
         }
     }
+
+    @UseGuards(AuthGuard)
+    @Get('verify')
+    async verifyToken(@Request() req:{userId:number}):Promise<ApiResponse> {
+        const user= await this.authService.verifyToken(req.userId);
+        return {
+            statusCode: HttpStatus.OK,
+            message: "verified successfully",
+            data: user
+        }
+    }
+
 
 }

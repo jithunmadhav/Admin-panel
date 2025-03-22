@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from 'src/user/entities/user.model';
 import * as bcrypt from 'bcrypt';
@@ -8,6 +8,12 @@ import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Task } from 'src/task/entities/task.model';
 
+interface verfyRes {
+    statusCode: number;
+    message: string;
+    user: {};
+     
+}
 @Injectable()
 export class AuthService {
     constructor (
@@ -32,22 +38,65 @@ export class AuthService {
         return user;
       }
 
-      async login(loginDto:LoginDto): Promise<{}> {
-        const user= await this.userModel.findOne({
-            where:{email:loginDto.email}
-            ,include:[{
-                model:this.taskModel
-            }]
-            ,raw: true});
-        if(!user) throw new NotFoundException('User not found')
-        const isMatch = await bcrypt.compare(loginDto.password, user.password);
-        if(!isMatch) throw new NotFoundException('User not found')
-
-        const payload = { id: user.id, email: user.email };
+      async login(loginDto: LoginDto): Promise<any> {
+        const user = await this.userModel.findOne({
+          where: { email: loginDto.email },
+          include: [
+            {
+              model: this.taskModel,
+              as: 'tasks',
+            },
+          ],
+        });
+      
+        if (!user) throw new NotFoundException('User not found');
+      
+        const userObj = user.toJSON(); // convert to plain object
+      
+        const isMatch = await bcrypt.compare(loginDto.password, userObj.password);
+        if (!isMatch) throw new UnauthorizedException('Invalid credentials');
+      
+        const payload = { id: userObj.id, email: userObj.email };
         const token = this.jwtService.sign(payload);
-    
-        await this.userModel.update({ token }, { where: { id: user.id } });    
-        return { ...user, token };
+      
+        await this.userModel.update({ token }, { where: { id: userObj.id } });
+      
+        // Remove password from response
+        delete userObj.password;
+      
+        return {
+          statusCode: 200,
+          message: 'User logged in successfully',
+          data: {
+            ...userObj,
+            token,
+          },
+        };
       }
+
+      async verifyToken(id:number): Promise<verfyRes> {
+        const user = await this.userModel.findOne({
+          where: { id: id },
+          include: [
+            {
+              model: this.taskModel,
+              as: 'tasks',
+            },
+          ],
+        });
+      
+        if (!user) throw new NotFoundException('User not found');
+      
+        const userObj = user.toJSON();       
+        // Remove password from response
+        delete userObj.password;
+      
+        return {
+          statusCode: 200,
+          message: 'User logged in successfully',
+          user: userObj
+        };
+      }
+      
 
 }
